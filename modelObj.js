@@ -110,7 +110,7 @@ Model.prototype.initParameters = function () {
     // rotation, translation, scaling de l'objet
     this.position = [0, 0, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
-    this.scale = 0.2; // mise à l'echelle (car l'objet est trop  gros par défaut)
+    this.scale = 0.008; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
 }
 
@@ -148,7 +148,13 @@ Model.prototype.move = function (x, y) {
         this.rotation[1] = Math.sign(this.rotation[1])*0.8;
     }
     this.position[0] += x * 0.1; // translation gauche/droite
+    if (Math.abs(this.position[0]) > 5) {
+        this.position[0] = Math.sign(this.position[0])*5;
+    }
     this.position[1] += y * 0.1; // translation haut/bas
+    if (Math.abs(this.position[1]) > 5) {
+        this.position[1] = Math.sign(this.position[1])*5;
+    }
     console.log(this.time);
 }
 
