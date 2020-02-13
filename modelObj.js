@@ -110,7 +110,7 @@ Model.prototype.initParameters = function () {
     // rotation, translation, scaling de l'objet
     this.position = [0, 0, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
-    this.scale = 0.008; // mise à l'echelle (car l'objet est trop  gros par défaut)
+    this.scale = 0.011; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
 }
 
@@ -141,7 +141,7 @@ Model.prototype.setParameters = function (elapsed) {
     if (Math.abs(this.rotation[1]) >= 0.05) {
         this.rotation[1] -= Math.sign(this.rotation[1])*0.05;
     } else {
-        this.rotation[0] = 0;
+        this.rotation[1] = 0;
     }
 }
 
