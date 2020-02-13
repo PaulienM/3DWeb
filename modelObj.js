@@ -133,8 +133,16 @@ Model.prototype.setParameters = function (elapsed) {
     this.modelMatrix = mat4.multiply(rxMat, this.modelMatrix);
     this.modelMatrix = mat4.multiply(tMat, this.modelMatrix);
     this.position[2] += Math.sin(this.time*0.7)*0.02;
-    this.rotation[0] -= Math.sign(this.rotation[0])*0.05;
-    this.rotation[1] -= Math.sign(this.rotation[1])*0.05;
+    if (Math.abs(this.rotation[0]) >= 0.05) {
+        this.rotation[0] -= Math.sign(this.rotation[0])*0.05;
+    } else {
+        this.rotation[0] = 0;
+    }
+    if (Math.abs(this.rotation[1]) >= 0.05) {
+        this.rotation[1] -= Math.sign(this.rotation[1])*0.05;
+    } else {
+        this.rotation[0] = 0;
+    }
 }
 
 Model.prototype.move = function (x, y) {
