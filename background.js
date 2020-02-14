@@ -85,7 +85,7 @@ Background.prototype.initParameters = function() {
 Background.prototype.setParameters = function(elapsed) {
     // animer le fond en modifiant la variable offset
     // par exemple :
-    // this.offset[1] += ... 
+    this.offset[1] += 0.02;
 }
 
 Background.prototype.sendUniformVariables = function() {

@@ -105,7 +105,14 @@
 		outColor = vec4(d, d, d, 1.0);
 
 		// affichage de la normale
-		//outColor = vec4(n,1.0);
+		outColor = vec4(n,1.0);
+//		float test1 = sin(vTextureCoord.x*50.);
+//		float test2 = sin(vTextureCoord.y*50.);
+//
+//		float test = distance(fract((vTextureCoord+uOffset)*10.0), vec2(0.5));
+//		test = test < 0.2 ? 1. : 0.;
+//
+//		outColor = vec4(vec3(test),1.);
 	}
 
 
@@ -211,9 +218,9 @@
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
             // dessin du fond (décommenter pour travailler dessus)
-            // gl.useProgram(background.shader());
-            // background.sendUniformVariables();
-            // background.draw();
+            gl.useProgram(background.shader());
+            background.sendUniformVariables();
+            background.draw();
 
             // dessin du vaisseau
             gl.useProgram(spaceship.shader());
