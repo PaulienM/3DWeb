@@ -2,15 +2,15 @@ var splatShader;
 
 function initSplatShader() {
     splatShader = initShaders("splat-vs","splat-fs");
-    
+
     // active ce shader
     gl.useProgram(splatShader);
-    
+
     // adresse des variables uniform dans le shader
     splatShader.positionUniform = gl.getUniformLocation(splatShader, "uPosition");
     splatShader.texUniform = gl.getUniformLocation(splatShader, "uTex");
     splatShader.couleurUniform = gl.getUniformLocation(splatShader, "maCouleur");
-    
+
     console.log("splat shader initialized");
 }
 
@@ -19,7 +19,7 @@ function Splat(splatTexture) {
     // elle est déjà chargée sur le GPU (carte graphique)
     this.splatTexture = splatTexture;
     this.initParameters();
-    
+
     var wo2 = 0.5*this.width;
     var ho2 = 0.5*this.height;
 
@@ -30,20 +30,20 @@ function Splat(splatTexture) {
 	wo2, ho2, -0.8,
 	-wo2, ho2, -0.8
     ];
-    
+
     var coords = [
-	0.0, 0.0, 
-	1.0, 0.0, 
-	1.0, 1.0, 
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
 	0.0, 1.0
     ];
-    
+
     var tri = [0,1,2,0,2,3];
-    
-    
+
+
     this.vao = gl.createVertexArray();
     gl.bindVertexArray(this.vao);
-    
+
     // cree un nouveau buffer sur le GPU et l'active
     this.vertexBuffer = gl.createBuffer();
     this.vertexBuffer.itemSize = 3;
@@ -52,7 +52,7 @@ function Splat(splatTexture) {
     gl.enableVertexAttribArray(0);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     gl.vertexAttribPointer(0, this.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
-    
+
     // meme principe pour les coords
     this.coordBuffer = gl.createBuffer();
     this.coordBuffer.itemSize = 2;
@@ -71,7 +71,7 @@ function Splat(splatTexture) {
     gl.bindVertexArray(null);
 
     this.loaded = true;
-    
+
     console.log("splat initialized");
 }
 
@@ -94,19 +94,19 @@ Splat.prototype.setPosition = function(x,y,z) {
 
 Splat.prototype.setParameters = function(elapsed) {
     this.time += 0.01*elapsed;
-    // on peut animer les splats ici. Par exemple : 
-    this.position[1] += 0.01; // permet de déplacer le splat vers le haut au fil du temps
+    // on peut animer les splats ici. Par exemple :
+    this.position[1] += 0.035; // permet de déplacer le splat vers le haut au fil du temps
     //this.position[0] += 0.02*Math.sin(this.time); // permet de déplacer le splat sur l'axe X
 }
 
 Splat.prototype.sendUniformVariables = function() {
     // envoie des variables au shader (position du splat, couleur, texture)
-    // fonction appelée à chaque frame, avant le dessin du splat 
+    // fonction appelée à chaque frame, avant le dessin du splat
     if(this.loaded) {
 	gl.uniform3fv(splatShader.positionUniform,this.position);
 	gl.uniform3fv(splatShader.couleurUniform,this.couleur);
 
-	// how to send a texture: 
+	// how to send a texture:
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D,this.splatTexture);
 	gl.uniform1i(splatShader.texUniform, 0);
@@ -114,7 +114,7 @@ Splat.prototype.sendUniformVariables = function() {
 }
 
 Splat.prototype.draw = function() {
-    // dessin du splat 
+    // dessin du splat
     if(this.loaded) {
 	gl.bindVertexArray(this.vao);
 	gl.drawElements(gl.TRIANGLES, this.triangles.numItems, gl.UNSIGNED_SHORT, 0);

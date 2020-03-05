@@ -163,7 +163,6 @@ Model.prototype.move = function (x, y) {
     if (Math.abs(this.position[1]) > 5) {
         this.position[1] = Math.sign(this.position[1])*5;
     }
-    console.log(this.time);
 }
 
 Model.prototype.getBBox = function () {

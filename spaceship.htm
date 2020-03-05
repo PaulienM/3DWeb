@@ -293,10 +293,13 @@
                 var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
 
 				// exemple: comment positionner un splat devant le vaisseau
-				var missile = new Splat(tex);
+				if (timeNow - lastTimeMissile > 300 || lastTimeMissile === 0) {
+                    var missile = new Splat(tex);
 
-				missile.setPosition(x, y, z);
-				missilesArray.push(missile);
+                    missile.setPosition(x, y, z);
+                    missilesArray.push(missile);
+                    lastTimeMissile = timeNow;
+                }
                 //shootSample.setPosition(x, y, z);
             }
 
@@ -311,10 +314,12 @@
 
         // animation
         var lastTime = 0;
+        var lastTimeMissile = 0;
+        var timeNow;
 
         function animate() {
             // fonction appelée à chaque frame, permet d'animer la scène
-            var timeNow = new Date().getTime();
+			timeNow = new Date().getTime();
             if (lastTime != 0) {
                 // anime chacun des objets de la scene
                 // si necessaire (en fonction du temps ecoulé)
@@ -326,7 +331,7 @@
 				missilesArray.forEach(missile  => {
 					missile.setParameters(elapsed);
 
-					if(missile.position[1] > 0.9) {
+					if(missile.position[1] > 1) {
 						missile.clear();
 					}
 				})
