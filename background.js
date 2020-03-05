@@ -2,10 +2,10 @@ var backgroundShader;
 
 function initBackgroundShader() {
     backgroundShader = initShaders("background-vs","background-fs");
-    
+
     // active ce shader
     gl.useProgram(backgroundShader);
-    
+
     // adresse des variables dans le shader associé
     backgroundShader.offsetUniform = gl.getUniformLocation(backgroundShader, "uOffset");
     backgroundShader.amplitudeUniform = gl.getUniformLocation(backgroundShader, "uAmplitude");
@@ -24,22 +24,22 @@ function Background() {
 	1.0, 1.0, 0.9999,
 	-1.0, 1.0, 0.9999
     ];
-    
-    
+
+
     var coords = [
-	0.0, 0.0, 
-	1.0, 0.0, 
-	1.0, 1.0, 
+	0.0, 0.0,
+	1.0, 0.0,
+	1.0, 1.0,
 	0.0, 1.0
     ];
-    
+
     var tri = [0,1,2,0,2,3];
-    
+
     this.initParameters();
-    
+
     this.vao = gl.createVertexArray();
     gl.bindVertexArray(this.vao);
-    
+
     // cree un nouveau buffer sur le GPU et l'active
     this.vertexBuffer = gl.createBuffer();
     this.vertexBuffer.itemSize = 3;
@@ -48,7 +48,7 @@ function Background() {
     gl.enableVertexAttribArray(0);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     gl.vertexAttribPointer(0, this.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
-    
+
     // meme principe pour les coords de texture
     this.coordBuffer = gl.createBuffer();
     this.coordBuffer.itemSize = 2;
@@ -77,9 +77,9 @@ Background.prototype.initParameters = function() {
     // paramètres envoyés au shader pour générer le fond
     this.timer = 0.0;
     this.offset = [0.0,0.0];
-    this.amplitude = 3.0;
+    this.amplitude = 10.0;
     this.frequency = 5.0;
-    this.persistence = 0.1; // niveau de details
+    this.persistence = 0.35; // niveau de details
 }
 
 Background.prototype.setParameters = function(elapsed) {

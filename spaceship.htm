@@ -96,16 +96,16 @@
 
 	void main(void) {
 		// décalage avec la variable uOffset
-		vec2 p = vTextureCoord*2.0-vec2(1.0)+uOffset;
+		vec2 p = vTextureCoord*2.0-vec2(.1)+uOffset;
 
 		float d = computeHeight(p);// profondeur au point p
 		vec3 n = computeNormal(p);// normale au point p
 
 		// affichage de la profondeur
-		outColor = vec4(d, d, d, 1.0);
+		// outColor = vec4(d, d, d, 10.0);
 
 		// affichage de la normale
-		outColor = vec4(n,1.0);
+		outColor = vec4(n,1);
 //		float test1 = sin(vTextureCoord.x*50.);
 //		float test2 = sin(vTextureCoord.y*50.);
 //

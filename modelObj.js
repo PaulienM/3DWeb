@@ -110,7 +110,7 @@ Model.prototype.initParameters = function () {
     // rotation, translation, scaling de l'objet
     this.position = [0, 0, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
-    this.scale = 0.016; // mise à l'echelle (car l'objet est trop  gros par défaut)
+    this.scale = 0.011; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
 }
 
@@ -121,9 +121,8 @@ Model.prototype.setParameters = function (elapsed) {
     // les matrices view et projection ne changent pas
 
     // creation des matrices rotation/translation/scaling
-    // var ryMat = mat4.rotate(mat4.identity(), this.rotation[0], [0, 1, 0]);
+    var ryMat = mat4.rotate(mat4.identity(), this.rotation[0], [0, 1, 0]);
     var rxMat = mat4.rotate(mat4.identity(), this.rotation[1], [1, 0, 0]);
-    var rxMat = mat4.rotate(mat4.identity(), 5, [1, 0, 0]);
     var tMat = mat4.translate(mat4.identity(), [this.position[0], this.position[1], this.position[2]]);
     var sMat = mat4.scale(mat4.identity(), [this.scale, this.scale, this.scale]);
 
