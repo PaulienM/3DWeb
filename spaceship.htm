@@ -75,7 +75,11 @@
 	float computeHeight(in vec2 p) {
 		// vous pouvez modifier cette fonction comme vous
 		// le souhaitez pour fabriquer votre propre background
-		return fractalNoise(p)*0.5+0.5;
+		float noise = fractalNoise(p)*0.5+0.5;
+		if (noise < -.8) {
+			noise = 0.;
+		}
+		return noise;
 	}
 
 	vec3 computeNormal(in vec2 p) {
