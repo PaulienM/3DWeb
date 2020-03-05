@@ -85,7 +85,7 @@
 		float yp = computeHeight(p+vec2(0.0, 0.001));
 		float ym = computeHeight(p+vec2(0.0, -0.001));
 
-		float gx = 0.5*(xp-xm)*scale;
+		float gx = 0.1*(xp-xm)*scale;
 		float gy = 0.5*(yp-ym)*scale;
 
 		vec3 v1 = normalize(vec3(1.0, 0.0, gx));
@@ -208,9 +208,12 @@
 
         var background;
         var spaceship;
-        var shootSample;
+        //var shootSample;
+        var missilesArray= [];
+		var tex;
 
-        function drawScene() {
+
+		function drawScene() {
             // initialisation du viewport
             gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
@@ -221,7 +224,6 @@
             gl.useProgram(background.shader());
             background.sendUniformVariables();
             background.draw();
-
             // dessin du vaisseau
             gl.useProgram(spaceship.shader());
             spaceship.sendUniformVariables();
@@ -229,10 +231,16 @@
 
             // test pour afficher un splat quand on appuie sur espace
             gl.enable(gl.BLEND); // transparence activée
-            gl.useProgram(shootSample.shader());
-            shootSample.sendUniformVariables();
-            shootSample.draw();
-            gl.disable(gl.BLEND); // transparence désactivée
+
+			missilesArray.forEach(missile  => {
+				gl.useProgram(missile.shader());
+				missile.sendUniformVariables();
+				missile.draw();
+			})
+			/*gl.useProgram(shootSample.shader());
+			shootSample.sendUniformVariables();
+			shootSample.draw();*/
+			gl.disable(gl.BLEND); // transparence désactivée
         }
 
         // une bonne maniere de gerer les evenements claviers
@@ -270,7 +278,11 @@
 
             if (currentlyPressedKeys[77]) { // M
                 // juste un test pour supprimer un splat (tir)
-                shootSample.clear();
+                // shootSample.clear();
+
+				missilesArray.forEach(missile  => {
+					missile.clear();
+				})
             }
 
             if (currentlyPressedKeys[32]) { // SPACE
@@ -280,7 +292,12 @@
                 var y = p[1][1];
                 var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
 
-                shootSample.setPosition(x, y, z);
+				// exemple: comment positionner un splat devant le vaisseau
+				var missile = new Splat(tex);
+
+				missile.setPosition(x, y, z);
+				missilesArray.push(missile);
+                //shootSample.setPosition(x, y, z);
             }
 
         }
@@ -304,17 +321,26 @@
                 var elapsed = timeNow - lastTime;
                 spaceship.setParameters(elapsed);
                 background.setParameters(elapsed);
-                shootSample.setParameters(elapsed);
+                //shootSample.setParameters(elapsed);
 
+				missilesArray.forEach(missile  => {
+					missile.setParameters(elapsed);
+
+					if(missile.position[1] > 0.9) {
+						missile.clear();
+					}
+				})
+				missilesArray = missilesArray.filter(missile => missile.loaded)
             }
             lastTime = timeNow;
         }
 
+        // mAIN LOOP
         function tick() {
-            requestAnimFrame(tick);
-            handleKeys();
-            drawScene();
-            animate();
+            requestAnimFrame(tick); // nav
+            handleKeys(); // action lié aux touches clavier
+            drawScene(); // dessine model et back ecran
+            animate(); // calcul nouvelles positions
         }
 
 
@@ -324,7 +350,7 @@
             initGL(canvas);
 
             // test: création d'une texture
-            var tex = initTexture('textures/bird.png');
+            tex = initTexture('textures/bird.png');
 
             initBackgroundShader();
             initModelShader();
@@ -333,7 +359,7 @@
             //heightfield = new Heightfield();
             background = new Background();
             spaceship = new Model('models/spaceship.obj');
-            shootSample = new Splat(tex);
+            //shootSample = new Splat(tex);
 
             // la couleur de fond sera grise foncée
             gl.clearColor(0.3, 0.3, 0.3, 1.0);

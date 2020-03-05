@@ -79,7 +79,7 @@ Background.prototype.initParameters = function() {
     this.offset = [0.0,0.0];
     this.amplitude = 3.0;
     this.frequency = 5.0;
-    this.persistence = 0.45;
+    this.persistence = 0.1; // niveau de details
 }
 
 Background.prototype.setParameters = function(elapsed) {
