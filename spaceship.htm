@@ -395,6 +395,7 @@
                 var elapsed = timeNow - lastTime;
                 spaceship.setParameters(elapsed);
                 background.setParameters(elapsed);
+                enemy.setParameters(elapsed);
                 //shootSample.setParameters(elapsed);
 
 				missilesArray.forEach(missile  => {
@@ -427,6 +428,7 @@
             tex = initTexture('textures/bird.png');
 
             initBackgroundShader();
+            initEnemyShader();
             initModelShader();
             initSplatShader();
 

@@ -1,15 +1,15 @@
 var enemyShader;
 // modele 3D
-function initModelShader() {
-    modelShader = initShaders("enemy-vs", "enemy-fs");
+function initEnemyShader() {
+    enemyShader = initShaders("enemy-vs", "enemy-fs");
 
     // active ce shader
-    gl.useProgram(modelShader);
+    gl.useProgram(enemyShader);
 
     // adresse des variables de type uniform dans le shader
-    modelShader.modelMatrixUniform = gl.getUniformLocation(modelShader, "uModelMatrixEnemy");
-    modelShader.viewMatrixUniform = gl.getUniformLocation(modelShader, "uViewMatrixEnemy");
-    modelShader.projMatrixUniform = gl.getUniformLocation(modelShader, "uProjMatrixEnemy");
+    enemyShader.modelMatrixUniform = gl.getUniformLocation(enemyShader, "uModelMatrixEnemy");
+    enemyShader.viewMatrixUniform = gl.getUniformLocation(enemyShader, "uViewMatrixEnemy");
+    enemyShader.projMatrixUniform = gl.getUniformLocation(enemyShader, "uProjMatrixEnemy");
 
     console.log("enemy shader initialized");
 }
@@ -110,7 +110,7 @@ Enemy.prototype.initParameters = function () {
     // rotation, translation, scaling de l'objet
     this.position = [0, 0, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
-    this.scale = 0.001; // mise à l'echelle (car l'objet est trop  gros par défaut)
+    this.scale = 0.1; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
 }
 
@@ -178,9 +178,9 @@ Enemy.prototype.sendUniformVariables = function () {
         var p = this.projMatrix;
 
         // envoie des matrices aux GPU
-        gl.uniformMatrix4fv(modelShader.modelMatrixUniform, false, this.modelMatrix);
-        gl.uniformMatrix4fv(modelShader.viewMatrixUniform, false, this.viewMatrix);
-        gl.uniformMatrix4fv(modelShader.projMatrixUniform, false, this.projMatrix);
+        gl.uniformMatrix4fv(enemyShader.modelMatrixUniform, false, this.modelMatrix);
+        gl.uniformMatrix4fv(enemyShader.viewMatrixUniform, false, this.viewMatrix);
+        gl.uniformMatrix4fv(enemyShader.projMatrixUniform, false, this.projMatrix);
 
         // calcul de la boite englobante (projetée)
         mat4.multiplyVec4(m, [this.bbmin[0], this.bbmin[1], this.bbmin[2], 1], this.bbminP);
@@ -203,7 +203,7 @@ Enemy.prototype.sendUniformVariables = function () {
 }
 
 Enemy.prototype.shader = function () {
-    return modelShader;
+    return enemyShader;
 }
 
 Enemy.prototype.draw = function () {
