@@ -116,7 +116,7 @@ Enemy.prototype.initParameters = function () {
 
 Enemy.prototype.setParameters = function (elapsed) {
     this.time += 0.01*elapsed;
-    this.position[1] -= 0.09;
+    this.position[1] -= 0.01;
 
     // fonction appelée à chaque frame.
     // mise à jour de la matrice modèle avec les paramètres de transformation

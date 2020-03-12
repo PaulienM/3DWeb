@@ -108,7 +108,7 @@ Model.prototype.initParameters = function () {
 
     // on utilise des variables pour se rappeler quelles sont les transformations courantes
     // rotation, translation, scaling de l'objet
-    this.position = [0, 0, -4]; // position de l'objet dans l'espace
+    this.position = [0, -4, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
     this.scale = 0.011; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
