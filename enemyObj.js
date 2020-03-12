@@ -123,6 +123,7 @@ Enemy.prototype.setParameters = function (elapsed) {
     // creation des matrices rotation/translation/scaling
     var ryMat = mat4.rotate(mat4.identity(), this.rotation[0], [0, 1, 0]);
     var rxMat = mat4.rotate(mat4.identity(), this.rotation[1], [1, 0, 0]);
+    var rzMat = mat4.rotate(mat4.identity(), 3.14159, [0, 0, 1]);
     var tMat = mat4.translate(mat4.identity(), [this.position[0], this.position[1], this.position[2]]);
     var sMat = mat4.scale(mat4.identity(), [this.scale, this.scale, this.scale]);
 
@@ -131,6 +132,7 @@ Enemy.prototype.setParameters = function (elapsed) {
     this.modelMatrix = mat4.multiply(sMat, this.modelMatrix);
     this.modelMatrix = mat4.multiply(ryMat, this.modelMatrix);
     this.modelMatrix = mat4.multiply(rxMat, this.modelMatrix);
+    this.modelMatrix = mat4.multiply(rzMat, this.modelMatrix);
     this.modelMatrix = mat4.multiply(tMat, this.modelMatrix);
     this.position[2] += Math.sin(this.time*0.7)*0.02;
     if (Math.abs(this.rotation[0]) >= 0.05) {
