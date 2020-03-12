@@ -108,7 +108,7 @@ Enemy.prototype.initParameters = function () {
 
     // on utilise des variables pour se rappeler quelles sont les transformations courantes
     // rotation, translation, scaling de l'objet
-    this.position = [0, 0, -4]; // position de l'objet dans l'espace
+    this.position = [0, 5, -4]; // position de l'objet dans l'espace
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
     this.scale = 0.1; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
@@ -116,6 +116,8 @@ Enemy.prototype.initParameters = function () {
 
 Enemy.prototype.setParameters = function (elapsed) {
     this.time += 0.01*elapsed;
+    this.position[1] -= 0.09;
+
     // fonction appelée à chaque frame.
     // mise à jour de la matrice modèle avec les paramètres de transformation
     // les matrices view et projection ne changent pas
