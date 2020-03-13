@@ -272,9 +272,10 @@
 
         var background;
         var spaceship;
-        var enemy;
-        //var shootSample;
+        // var enemy;
+        // var shootSample;
         var missilesArray= [];
+		var enemiesArray= [];
 		var tex;
 
 
@@ -294,9 +295,11 @@
             spaceship.sendUniformVariables();
             spaceship.draw();
 
-            gl.useProgram(enemy.shader());
-            enemy.sendUniformVariables();
-            enemy.draw();
+            enemiesArray.forEach(enemy => {
+				gl.useProgram(enemy.shader()); //
+				enemy.sendUniformVariables();
+				enemy.draw();
+			})
 
             // test pour afficher un splat quand on appuie sur espace
             gl.enable(gl.BLEND); // transparence activée
@@ -390,13 +393,6 @@
 
         function animate() {
 
-			var p = enemy.getBBox(); // boite englobante du vaisseau sur l'écran
-			var x = (p[0][0] + p[1][0]) / 2;
-			var g = p[0][0];
-			var d = p[1][0];
-			var y = p[1][1];
-			var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
-
             // fonction appelée à chaque frame, permet d'animer la scène
 			timeNow = new Date().getTime();
             if (lastTime != 0) {
@@ -405,21 +401,44 @@
                 var elapsed = timeNow - lastTime;
                 spaceship.setParameters(elapsed);
                 background.setParameters(elapsed);
-                enemy.setParameters(elapsed);
+
+				enemiesArray.forEach(enemy => {
+					enemy.setParameters(elapsed);
+				})
                 //shootSample.setParameters(elapsed);
 
-				missilesArray.forEach(missile  => {
-					missile.setParameters(elapsed);
+				enemiesArray.forEach(enemy => {
 
-					if(missile.position[1] > 1) {
-						missile.clear();
-					}
-					if(missile.position[0] < g && missile.position[0] > d && missile.position[1] >= y && enemy.loaded) {
-						missile.clear();
+					var p = enemy.getBBox(); // boite englobante du vaisseau sur l'écran
+					var x = (p[0][0] + p[1][0]) / 2;
+					var g = p[0][0];
+					var d = p[1][0];
+					var y = p[1][1];
+					var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
+
+					missilesArray.forEach(missile => {
+						missile.setParameters(elapsed);
+
+						if (missile.position[1] > 1) {
+							missile.clear();
+						}
+						if (missile.position[0] < g && missile.position[0] > d && missile.position[1] >= y && enemy.loaded) {
+							missile.clear();
+							enemy.clear();
+						}
+					})
+					
+					// TODO Trouver la position où l'ennemi sort de l'écran pour le clear et créer d'autres ennemis
+					/*if (enemy.position[1] < 4) {
 						enemy.clear();
-					}
+					}*/
 				})
 				missilesArray = missilesArray.filter(missile => missile.loaded)
+				enemiesArray = enemiesArray.filter(missile => missile.loaded)
+
+				if (enemiesArray.length < 4) {
+					enemiesArray.push(createEnnemyRandomPosition());
+				}
             }
             lastTime = timeNow;
         }
@@ -449,7 +468,13 @@
             //heightfield = new Heightfield();
             background = new Background();
             spaceship = new Model('models/spaceship.obj');
-            enemy = new Enemy('models/plane.obj');
+            // var enemy = new Enemy('models/plane.obj', 0, 2, -2);
+
+            // enemy = new Enemy('models/plane.obj');
+            enemiesArray.push(createEnnemyRandomPosition());
+            enemiesArray.push(createEnnemyRandomPosition());
+            enemiesArray.push(createEnnemyRandomPosition());
+            enemiesArray.push(createEnnemyRandomPosition());
             //shootSample = new Splat(tex);
 
             // la couleur de fond sera grise foncée
@@ -472,6 +497,13 @@
             tick();
         }
 
+        function createEnnemyRandomPosition() {
+        	var x = Math.floor(Math.random() * Math.floor(5));
+        	var y = Math.floor(Math.random() * Math.floor(5));
+        	var z = -1 * Math.floor(Math.random() * Math.floor(5));
+
+        	return new Enemy('models/plane.obj', x, y, z);
+		}
 
 	</script>
 

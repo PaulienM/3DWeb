@@ -14,7 +14,7 @@ function initEnemyShader() {
     console.log("enemy shader initialized");
 }
 
-function Enemy(filename) {
+function Enemy(filename, x,y,z) {
     this.vertexBuffer = gl.createBuffer();
     this.vertexBuffer.itemSize = 0;
     this.vertexBuffer.numItems = 0;
@@ -28,9 +28,11 @@ function Enemy(filename) {
 
     this.bbminP = [0, 0, 0, 0];
     this.bbmaxP = [0, 0, 0, 0];
+
+
     this.loaded = false;
 
-    this.load(filename);
+    this.load(filename, x,y,z);
 }
 
 Enemy.prototype.computeBoundingBox = function (vertices) {
@@ -54,7 +56,7 @@ Enemy.prototype.computeBoundingBox = function (vertices) {
     }
 }
 
-Enemy.prototype.handleLoadedObject = function (objData) {
+Enemy.prototype.handleLoadedObject = function (objData, x,y,z) {
     var vertices = objData[0];
     var normals = objData[1];
 
@@ -64,7 +66,7 @@ Enemy.prototype.handleLoadedObject = function (objData) {
     console.log("BBox min: " + this.bbmin[0] + "," + this.bbmin[1] + "," + this.bbmin[2]);
     console.log("BBox max: " + this.bbmax[0] + "," + this.bbmax[1] + "," + this.bbmax[2]);
 
-    this.initParameters();
+    this.initParameters(x,y,z);
 
     this.vao = gl.createVertexArray();
     gl.bindVertexArray(this.vao);
@@ -95,7 +97,7 @@ Enemy.prototype.handleLoadedObject = function (objData) {
 }
 
 
-Enemy.prototype.initParameters = function () {
+Enemy.prototype.initParameters = function (x,y,z) {
     this.modelMatrix = mat4.identity();
     this.viewMatrix = mat4.identity();
     this.projMatrix = mat4.identity();
@@ -108,10 +110,18 @@ Enemy.prototype.initParameters = function () {
 
     // on utilise des variables pour se rappeler quelles sont les transformations courantes
     // rotation, translation, scaling de l'objet
-    this.position = [0, 5, -4]; // position de l'objet dans l'espace
+    if(x!= undefined && y!= undefined && z!= undefined) {
+        this.setPosition(x,y,z);
+    } else {
+        this.position = [0, 5, -4]; // position de l'objet dans l'espace
+    }
     this.rotation = [0.,0.]; // angle de rotation en radian autour de l'axe Y
     this.scale = 0.1; // mise à l'echelle (car l'objet est trop  gros par défaut)
     this.time = 0.0;
+}
+
+Enemy.prototype.setPosition = function(x, y, z) {
+    this.position = [x, y, z];
 }
 
 Enemy.prototype.setParameters = function (elapsed) {
@@ -227,7 +237,7 @@ Enemy.prototype.clear = function () {
     this.loaded = false;
 }
 
-Enemy.prototype.load = function (filename) {
+Enemy.prototype.load = function (filename, x,y,z) {
     // lecture du fichier, récupération des positions et des normales
     var vertices = null;
     var xmlhttp = new XMLHttpRequest();
@@ -291,7 +301,7 @@ Enemy.prototype.load = function (filename) {
                     new Float32Array(arrayVertex),
                     new Float32Array(arrayNormal)
                 ]
-                instance.handleLoadedObject(objData);
+                instance.handleLoadedObject(objData, x,y,z);
 
             }
         }
