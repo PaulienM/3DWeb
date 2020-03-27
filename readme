@@ -1,0 +1,19 @@
+Etapes ok :
+
+- Background
+- tableau de missiles
+- tableau ennemis (génère des bugs d'affichage)
+- Disparition Missile/ ennemi si collision
+
+Etapes à venir :
+
+- Supprimer ennemies qui sortent du cadre
+- Modifier position de départ de l'ennemi
+- Faire disparaître ennemi qui percute avion
+- Ajouter nouvel ennemi qd ennemies < 4 sur l'écran
+- Explosion lors de collision - nouveau splat avec un tableau de textures (4 images devraient suffir)
+
+Bugs :
+
+- au chargement missile gros plan et fond noir
+- bug affichage lorsque missile percute ennemi
