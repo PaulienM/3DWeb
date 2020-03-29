@@ -8,13 +8,13 @@ Etapes ok :
 - Modifier position de départ de l'ennemi à l'init et lors de l'ajout de nouveaux ennemis
 - Ajouter nouvel ennemi qd ennemies < 5 sur l'écran (cas : ennemi touché par missile et ennemi sortie écran)
 - Etendre le mode aléatoir sur l'axe des X pour que cela prenne tout l'écran à l'init et à l'ajout de nouveaux missilqqqqqqqqes
-
+- Faire disparaître avion si touché par ennemi
 
 Etapes à venir :
 
 - Remplacer missile par tardis
-- Faire disparaître ennemi qui percute avion
 - Explosion lors de collision - nouveau splat avec un tableau de textures (4 images devraient suffir)
+- Lorsque ennemi percute avion === affiche un game over (juste une idée :))
 
 Bugs :
 

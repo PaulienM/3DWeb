@@ -223,7 +223,7 @@
 		float spec = pow(max(dot(r,v),0.0),s);
 
 		// pour le moment, on affiche juste la normale
-		outColor = vec4(Kd*diff + Ks*spec, 1.0);
+		 outColor = vec4(Kd*diff + Ks*spec, 1.0);
 	}
 
 	</script>
@@ -295,7 +295,7 @@
 
 			// dessin ennemis
 			enemiesArray.forEach(enemy => {
-				gl.useProgram(enemy.shader()); //
+				gl.useProgram(enemy.shader());
 				enemy.sendUniformVariables();
 				enemy.draw();
 			})
@@ -342,8 +342,8 @@
 				spaceship.move(0, 1);
 
 				enemiesArray.forEach(enemy => {
-					logPosition(enemy);
-
+					// logPosition(enemy);
+					logPosition(spaceship.getBBox());
 				})
 
 			}
@@ -405,14 +405,15 @@
 		}
 
 		function logPosition(testEnnemies) {
-			console.log('enemy.position[1] ===', testEnnemies);
+			// console.log('enemy.position[1] ===', testEnnemies);
+			console.log('getBox()', testEnnemies);
 		}
 
 		function animate() {
 
 			// fonction appelée à chaque frame, permet d'animer la scène
 			timeNow = new Date().getTime();
-			log(enemiesArray);
+			// log(enemiesArray);
 
 			if (lastTime != 0) {
 				// anime chacun des objets de la scene
@@ -421,12 +422,12 @@
 				background.setParameters(elapsed);
 				spaceship.setParameters(elapsed);
 
-				/*var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
+				var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
 				var xs = (s[0][0] + s[1][0]) / 2;
 				var gs = s[0][0];
 				var ds = s[1][0];
 				var ys = s[1][1];
-				var zs = s[1][2] + 0.005;*/
+				var zs = s[1][2] + 0.005;
 
 				enemiesArray.forEach(enemy => {
 					enemy.setParameters(elapsed);
@@ -441,11 +442,12 @@
 					var y = p[1][1];
 					var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
 
-					// TODO clear enemy et avion lorsque collision
-					/*if (gs < g && ds > d && zs >= y && enemy.loaded) {
+					// Réinitialiser position enemy et avion lorsque collision
+					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
 						spaceship.clear();
-						enemy.clear();
-					}*/
+						enemy.position[1] = 6;
+					}
+
 					missilesArray.forEach(missile => {
 						missile.setParameters(elapsed);
 
@@ -525,7 +527,7 @@
 			document.onkeyup = handleKeyUp;
 
 			// dessine la scene
-			tick();
+			 tick();
 		}
 
 		function positionXAleatoire(min, max) {
