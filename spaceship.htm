@@ -344,6 +344,12 @@
 
 			if (currentlyPressedKeys[90]) { // Z
 				spaceship.move(0, 1);
+
+				enemiesArray.forEach(enemy => {
+					logPosition(enemy);
+
+				})
+
 			}
 
 			if (currentlyPressedKeys[83]) { // S
@@ -402,11 +408,12 @@
 			if(timeNowLog - lastTimeLog > 1000) {
 				console.log('test ===', test);
 				lastTimeLog = timeNowLog;
-			} /*else {
-				 console.log('timeNowLog ===', timeNowLog);
-				 console.log('lastTimeLog ===', lastTimeLog);
+			}
+		}
 
-			}*/
+		function logPosition(testEnnemies) {
+
+			console.log('enemy.position[1] ===', testEnnemies);
 		}
 
 		function animate() {
@@ -449,6 +456,7 @@
 						enemy.clear();
 					}*/
 					missilesArray.forEach(missile => {
+						// var enemyPositionY = enemy.position[0];
 						missile.setParameters(elapsed);
 
 						if (missile.position[1] > 1) {
@@ -458,15 +466,15 @@
 							missile.clear();
 							// enemy.clear();
 							enemy.position[1] = Math.floor(Math.random() * Math.floor(5));
-
 						}
 
 					})
 
 					// TODO Trouver la position où l'ennemi sort de l'écran pour le clear et créer d'autres ennemis
-					if (enemy.position[1] < -1) {
+					if (enemy.position[1] < -7) {
 						// enemy.clear();
-						enemy.position[1] = Math.floor(Math.random() * Math.floor(5));
+						enemy.position[0] = Math.floor(Math.random() * Math.floor(5));
+						enemy.position[1] = 6;
 					}
 
 					// TODO si clear un enemy en ajouter un
@@ -510,7 +518,7 @@
 
 			// enemy = new Enemy('models/plane.obj');
 			enemiesArray.push(createEnnemyRandomPosition());
-			enemiesArray.push(createEnnemyRandomPosition());
+			// enemiesArray.push(createEnnemyRandomPosition());
 			// enemiesArray.push(createEnnemyRandomPosition());
 			// enemiesArray.push(createEnnemyRandomPosition());
 			//shootSample = new Splat(tex);
@@ -537,7 +545,7 @@
 
 		function createEnnemyRandomPosition() {
 			var x = Math.floor(Math.random() * Math.floor(5));
-			var y = Math.floor(Math.random() * Math.floor(5));
+			var y = 6;
 			var z = -1 * Math.floor(Math.random() * Math.floor(5));
 
 			return new Enemy('models/plane.obj', x, y, z);
