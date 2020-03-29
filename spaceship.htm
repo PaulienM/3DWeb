@@ -270,239 +270,277 @@
 
 	<script type="text/javascript">
 
-        var background;
-        var spaceship;
-        // var enemy;
-        // var shootSample;
-        var missilesArray= [];
+		var background;
+		var spaceship;
+		var missilesArray= [];
 		var enemiesArray= [];
 		var tex;
 
-
 		function drawScene() {
-            // initialisation du viewport
-            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+			// initialisation du viewport
+			gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
-            // efface les buffers de couleur et de profondeur
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			// efface les buffers de couleur et de profondeur
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-            // dessin du fond (décommenter pour travailler dessus)
-            gl.useProgram(background.shader());
-            background.sendUniformVariables();
-            background.draw();
-            // dessin du vaisseau
-            gl.useProgram(spaceship.shader());
-            spaceship.sendUniformVariables();
-            spaceship.draw();
+			// dessin du fond (décommenter pour travailler dessus)
+			gl.useProgram(background.shader());
+			background.sendUniformVariables();
+			background.draw();
 
-            enemiesArray.forEach(enemy => {
+			// dessin du vaisseau
+			gl.useProgram(spaceship.shader());
+			spaceship.sendUniformVariables();
+			spaceship.draw();
+
+			// dessin ennemis
+			enemiesArray.forEach(enemy => {
 				gl.useProgram(enemy.shader()); //
 				enemy.sendUniformVariables();
 				enemy.draw();
 			})
 
-            // test pour afficher un splat quand on appuie sur espace
-            gl.enable(gl.BLEND); // transparence activée
+			// test pour afficher un splat quand on appuie sur espace
+			gl.enable(gl.BLEND); // transparence activée
 
+			// dessin missiles
 			missilesArray.forEach(missile  => {
 				gl.useProgram(missile.shader());
 				missile.sendUniformVariables();
 				missile.draw();
 			})
+
 			/*gl.useProgram(shootSample.shader());
 			shootSample.sendUniformVariables();
 			shootSample.draw();*/
+
 			gl.disable(gl.BLEND); // transparence désactivée
-        }
+		}
 
-        // une bonne maniere de gerer les evenements claviers
-        var currentlyPressedKeys = {};
+		// une bonne maniere de gerer les evenements claviers
+		var currentlyPressedKeys = {};
 
-        function handleKeyDown(event) {
-            currentlyPressedKeys[event.keyCode] = true;
-        }
+		function handleKeyDown(event) {
+			currentlyPressedKeys[event.keyCode] = true;
+		}
 
 
-        function handleKeyUp(event) {
-            currentlyPressedKeys[event.keyCode] = false;
-        }
+		function handleKeyUp(event) {
+			currentlyPressedKeys[event.keyCode] = false;
+		}
 
-        function handleKeys() {
-            // vous pouvez utiliser ce genre de fonction
-            // pour faire bouger votre vaisseau
-            // par exemple :
+		function handleKeys() {
+			// vous pouvez utiliser ce genre de fonction
+			// pour faire bouger votre vaisseau
+			// par exemple :
 
-            if (currentlyPressedKeys[68]) { // D
-                spaceship.move(1, 0);
-            }
+			if (currentlyPressedKeys[68]) { // D
+				spaceship.move(1, 0);
+			}
 
-            if (currentlyPressedKeys[81]) { // Q
-                spaceship.move(-1, 0);
-            }
+			if (currentlyPressedKeys[81]) { // Q
+				spaceship.move(-1, 0);
+			}
 
-            if (currentlyPressedKeys[90]) { // Z
-                spaceship.move(0, 1);
-            }
+			if (currentlyPressedKeys[90]) { // Z
+				spaceship.move(0, 1);
+			}
 
-            if (currentlyPressedKeys[83]) { // S
-                spaceship.move(0, -1);
-            }
+			if (currentlyPressedKeys[83]) { // S
+				spaceship.move(0, -1);
+			}
 
-            if (currentlyPressedKeys[77]) { // M
-                // juste un test pour supprimer un splat (tir)
-                // shootSample.clear();
+			if (currentlyPressedKeys[77]) { // M
+				// juste un test pour supprimer un splat (tir)
+				// shootSample.clear();
 
 				missilesArray.forEach(missile  => {
 					missile.clear();
 				})
-            }
+			}
 
-            if (currentlyPressedKeys[32]) { // SPACE
-                // exemple: comment positionner un splat devant le vaisseau
-                var p = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
-                var x = (p[0][0] + p[1][0]) / 2;
-                var y = p[1][1];
-                var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
+			if (currentlyPressedKeys[32]) { // SPACE
+				// exemple: comment positionner un splat devant le vaisseau
+				var p = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
+				var x = (p[0][0] + p[1][0]) / 2;
+				var y = p[1][1];
+				var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
 
 
 
 				// exemple: comment positionner un splat devant le vaisseau
 				if (timeNow - lastTimeMissile > 300 || lastTimeMissile === 0) {
-                    var missile = new Splat(tex);
+					var missile = new Splat(tex);
 
-                    missile.setPosition(x, y, z);
-                    missilesArray.push(missile);
-                    lastTimeMissile = timeNow;
-                }
-                //shootSample.setPosition(x, y, z);
-            }
+					missile.setPosition(x, y, z);
+					missilesArray.push(missile);
+					lastTimeMissile = timeNow;
+				}
+				//shootSample.setPosition(x, y, z);
+			}
 
-        }
+		}
 
-        function mouseMove(event) {
-            // recup evenement souris
-            //var newx = 2.0*(event.clientX/gl.viewportWidth)-1.0;
-            //var newy = -(2.0*(event.clientY/gl.viewportHeight)-1.0);
-        }
+		function mouseMove(event) {
+			// recup evenement souris
+			//var newx = 2.0*(event.clientX/gl.viewportWidth)-1.0;
+			//var newy = -(2.0*(event.clientY/gl.viewportHeight)-1.0);
+		}
 
 
-        // animation
-        var lastTime = 0;
-        var lastTimeMissile = 0;
-        var timeNow;
+		// animation
+		var lastTime = 0;
+		var lastTimeMissile = 0;
+		var timeNow;
+		var timeNowLog;
+		var lastTimeLog = 0;
+		var maxEnnemyCounnt = 2;
 
-        function animate() {
+		function log(test) {
+			timeNowLog = new Date().getTime();
 
-            // fonction appelée à chaque frame, permet d'animer la scène
+			if(timeNowLog - lastTimeLog > 1000) {
+				console.log('test ===', test);
+				lastTimeLog = timeNowLog;
+			} /*else {
+				 console.log('timeNowLog ===', timeNowLog);
+				 console.log('lastTimeLog ===', lastTimeLog);
+
+			}*/
+		}
+
+		function animate() {
+
+			// fonction appelée à chaque frame, permet d'animer la scène
 			timeNow = new Date().getTime();
-            if (lastTime != 0) {
-                // anime chacun des objets de la scene
-                // si necessaire (en fonction du temps ecoulé)
-                var elapsed = timeNow - lastTime;
-                spaceship.setParameters(elapsed);
-                background.setParameters(elapsed);
+			log(enemiesArray);
+
+			if (lastTime != 0) {
+				// anime chacun des objets de la scene
+				// si necessaire (en fonction du temps ecoulé)
+				var elapsed = timeNow - lastTime;
+				background.setParameters(elapsed);
+				spaceship.setParameters(elapsed);
+
+				/*var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
+				var xs = (s[0][0] + s[1][0]) / 2;
+				var gs = s[0][0];
+				var ds = s[1][0];
+				var ys = s[1][1];
+				var zs = s[1][2] + 0.005;*/
 
 				enemiesArray.forEach(enemy => {
 					enemy.setParameters(elapsed);
 				})
-                //shootSample.setParameters(elapsed);
+				//shootSample.setParameters(elapsed);
 
 				enemiesArray.forEach(enemy => {
 
-					var p = enemy.getBBox(); // boite englobante du vaisseau sur l'écran
+					var p = enemy.getBBox(); // boite englobante ennemy
 					var x = (p[0][0] + p[1][0]) / 2;
 					var g = p[0][0];
 					var d = p[1][0];
 					var y = p[1][1];
 					var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
 
+					// TODO clear enemy et avion lorsque collision
+					/*if (gs < g && ds > d && zs >= y && enemy.loaded) {
+						spaceship.clear();
+						enemy.clear();
+					}*/
 					missilesArray.forEach(missile => {
 						missile.setParameters(elapsed);
 
 						if (missile.position[1] > 1) {
-							missile.clear();
+							missile.clear(); // recycler
 						}
 						if (missile.position[0] < g && missile.position[0] > d && missile.position[1] >= y && enemy.loaded) {
 							missile.clear();
-							enemy.clear();
+							// enemy.clear();
+							enemy.position[1] = Math.floor(Math.random() * Math.floor(5));
+
 						}
+
 					})
-					
+
 					// TODO Trouver la position où l'ennemi sort de l'écran pour le clear et créer d'autres ennemis
-					/*if (enemy.position[1] < 4) {
-						enemy.clear();
+					if (enemy.position[1] < -1) {
+						// enemy.clear();
+						enemy.position[1] = Math.floor(Math.random() * Math.floor(5));
+					}
+
+					// TODO si clear un enemy en ajouter un
+					/*if (enemiesArray.length < maxEnnemyCounnt) {
+						enemiesArray.push(createEnnemyRandomPosition());
 					}*/
 				})
+
 				missilesArray = missilesArray.filter(missile => missile.loaded)
-				enemiesArray = enemiesArray.filter(missile => missile.loaded)
+				// enemiesArray = enemiesArray.filter(missile => missile.loaded)
+			}
+			lastTime = timeNow;
+		}
 
-				if (enemiesArray.length < 4) {
-					enemiesArray.push(createEnnemyRandomPosition());
-				}
-            }
-            lastTime = timeNow;
-        }
-
-        // mAIN LOOP
-        function tick() {
-            requestAnimFrame(tick); // nav
-            handleKeys(); // action lié aux touches clavier
-            drawScene(); // dessine model et back ecran
-            animate(); // calcul nouvelles positions
-        }
+		// mAIN LOOP
+		function tick() {
+			requestAnimFrame(tick); // nav
+			handleKeys(); // action lié aux touches clavier
+			drawScene(); // dessine model et back ecran
+			animate(); // calcul nouvelles positions
+		}
 
 
-        function webGLStart() {
-            // initialisation du canvas et des objets OpenGL
-            var canvas = document.getElementById("SpaceShip");
-            initGL(canvas);
+		function webGLStart() {
+			// initialisation du canvas et des objets OpenGL
+			var canvas = document.getElementById("SpaceShip");
+			initGL(canvas);
 
-            // test: création d'une texture
-            tex = initTexture('textures/bird.png');
+			// test: création d'une texture
+			tex = initTexture('textures/bird.png');
 
-            initBackgroundShader();
-            initEnemyShader();
-            initModelShader();
-            initSplatShader();
+			initBackgroundShader();
+			initEnemyShader();
+			initModelShader();
+			initSplatShader();
 
-            //heightfield = new Heightfield();
-            background = new Background();
-            spaceship = new Model('models/spaceship.obj');
-            // var enemy = new Enemy('models/plane.obj', 0, 2, -2);
+			//heightfield = new Heightfield();
+			background = new Background();
+			spaceship = new Model('models/spaceship.obj');
+			// var enemy = new Enemy('models/plane.obj', 0, 2, -2);
 
-            // enemy = new Enemy('models/plane.obj');
-            enemiesArray.push(createEnnemyRandomPosition());
-            enemiesArray.push(createEnnemyRandomPosition());
-            enemiesArray.push(createEnnemyRandomPosition());
-            enemiesArray.push(createEnnemyRandomPosition());
-            //shootSample = new Splat(tex);
+			// enemy = new Enemy('models/plane.obj');
+			enemiesArray.push(createEnnemyRandomPosition());
+			enemiesArray.push(createEnnemyRandomPosition());
+			// enemiesArray.push(createEnnemyRandomPosition());
+			// enemiesArray.push(createEnnemyRandomPosition());
+			//shootSample = new Splat(tex);
 
-            // la couleur de fond sera grise foncée
-            gl.clearColor(0.3, 0.3, 0.3, 1.0);
+			// la couleur de fond sera grise foncée
+			gl.clearColor(0.3, 0.3, 0.3, 1.0);
 
-            // active le test de profondeur
-            gl.enable(gl.DEPTH_TEST);
+			// active le test de profondeur
+			gl.enable(gl.DEPTH_TEST);
 
-            // fonction de mélange utilisée pour la transparence
-            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+			// fonction de mélange utilisée pour la transparence
+			gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-            /* Mouse and keyboard interaction functions */
-            //canvas.addEventListener('mousedown', tbMouseDown, true);
-            //canvas.addEventListener('mousemove', mouseMove, true);
-            //canvas.addEventListener('mouseup', tbMouseUp, true);
-            document.onkeydown = handleKeyDown;
-            document.onkeyup = handleKeyUp;
+			/* Mouse and keyboard interaction functions */
+			//canvas.addEventListener('mousedown', tbMouseDown, true);
+			//canvas.addEventListener('mousemove', mouseMove, true);
+			//canvas.addEventListener('mouseup', tbMouseUp, true);
+			document.onkeydown = handleKeyDown;
+			document.onkeyup = handleKeyUp;
 
-            // dessine la scene
-            tick();
-        }
+			// dessine la scene
+			tick();
+		}
 
-        function createEnnemyRandomPosition() {
-        	var x = Math.floor(Math.random() * Math.floor(5));
-        	var y = Math.floor(Math.random() * Math.floor(5));
-        	var z = -1 * Math.floor(Math.random() * Math.floor(5));
+		function createEnnemyRandomPosition() {
+			var x = Math.floor(Math.random() * Math.floor(5));
+			var y = Math.floor(Math.random() * Math.floor(5));
+			var z = -1 * Math.floor(Math.random() * Math.floor(5));
 
-        	return new Enemy('models/plane.obj', x, y, z);
+			return new Enemy('models/plane.obj', x, y, z);
 		}
 
 	</script>
