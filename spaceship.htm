@@ -543,8 +543,12 @@
 			tick();
 		}
 
+		function positionXAleatoire(min, max) {
+			return Math.floor(Math.random()*(max - min + 1)) + min;
+		}
+
 		function createEnnemyRandomPosition() {
-			var x = Math.floor(Math.random() * Math.floor(5));
+			var x = positionXAleatoire(-5, 5);
 			var y = 6;
 			var z = -1 * Math.floor(Math.random() * Math.floor(5));
 
