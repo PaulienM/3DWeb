@@ -14,7 +14,7 @@ Etapes à venir :
 
 - Remplacer missile par tardis
 - Explosion lors de collision - nouveau splat avec un tableau de textures (4 images devraient suffir)
-- Lorsque ennemi percute avion === affiche un game over (juste une idée :))
+- Lorsque ennemi percute avion === affiche un game over (juste une idée :)) ou Système de 3 vies et gameover
 - Ajouter looping ou autres figures pour avion / ennemi / missiles
 
 Bugs :

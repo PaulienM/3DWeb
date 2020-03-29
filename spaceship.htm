@@ -275,6 +275,11 @@
 		var missilesArray= [];
 		var enemiesArray= [];
 		var tex;
+		var explosion1;
+		var explosion2;
+		var explosion3;
+		var explosion4;
+		var explosionsArray= [];
 
 		function drawScene() {
 			// initialisation du viewport
@@ -308,6 +313,13 @@
 				gl.useProgram(missile.shader());
 				missile.sendUniformVariables();
 				missile.draw();
+			})
+
+			// Dessin explosions
+			explosionsArray.forEach(explosion  => {
+				gl.useProgram(explosion.shader());
+				explosion.sendUniformVariables();
+				explosion.draw();
 			})
 
 			gl.disable(gl.BLEND); // transparence désactivée
@@ -406,7 +418,40 @@
 
 		function logPosition(testEnnemies) {
 			// console.log('enemy.position[1] ===', testEnnemies);
-			console.log('getBox()', testEnnemies);
+			// console.log('getBox()', testEnnemies);
+			console.log('explosionsArray[] = ', explosionsArray);
+
+		}
+
+		var startTimeExplosion = 0;
+		var isExploding = false;
+		var currentFrame = 0; // image animation
+		var frameDuration = 200;
+		var lastTimeExplosion = 0;
+		var refInterval = null;
+
+		function animateExplosion(x, y,z, elapsed) {
+			if(!isExploding) {
+				isExploding = true;
+				currentFrame = 0;
+				startTimeExplosion = new Date().getTime();
+				// explosionsArray[currentFrame].draw();
+				explosionsArray[currentFrame].position[0] = x;
+				explosionsArray[currentFrame].position[1] = y;
+				explosionsArray[currentFrame].position[2] = z;
+				explosionsArray[currentFrame].setParameters(elapsed);
+				refInterval = window.setInterval(function(){
+					currentFrame++;
+					if(currentFrame === 4) {
+						isExploding = false;
+						clearInterval(refInterval);
+					}
+					explosionsArray[currentFrame].position[0] = x;
+					explosionsArray[currentFrame].position[1] = y;
+					explosionsArray[currentFrame].position[2] = z;
+					explosionsArray[currentFrame].setParameters(elapsed + frameDuration);
+				}, frameDuration);
+			}
 		}
 
 		function animate() {
@@ -456,10 +501,17 @@
 						}
 						if (missile.position[0] < g && missile.position[0] > d && missile.position[1] >= y && enemy.loaded) {
 							missile.clear();
+
+							animateExplosion(missile.position[0], missile.position[1],  missile.position[2], elapsed);
+
 							enemy.position[1] = 6;
 						}
-
 					})
+
+					/*explosionsArray.forEach(explosion => {
+						explosion.setParameters(elapsed);
+					})*/
+
 
 					// si ennemi sort de l'écran recycler sa position
 					if (enemy.position[1] < -7) {
@@ -508,7 +560,17 @@
 			enemiesArray.push(createEnnemyRandomPosition());
 			enemiesArray.push(createEnnemyRandomPosition());
 			enemiesArray.push(createEnnemyRandomPosition());
-			//shootSample = new Splat(tex);
+
+			textureExplosion1 = initTexture('textures/explosion1.png');
+			textureExplosion2 = initTexture('textures/explosion2.png');
+			textureExplosion3 = initTexture('textures/explosion3.png');
+			textureExplosion4 = initTexture('textures/explosion4.png');
+			var explosion1 = new Splat(textureExplosion1);
+			var explosion2 = new Splat(textureExplosion2);
+			var explosion3 = new Splat(textureExplosion3);
+			var explosion4 = new Splat(textureExplosion4);
+
+			explosionsArray= [explosion1, explosion2, explosion3, explosion4];
 
 			// la couleur de fond sera grise foncée
 			gl.clearColor(0.3, 0.3, 0.3, 1.0);
