@@ -400,7 +400,7 @@
 		var timeNow;
 		var timeNowLog;
 		var lastTimeLog = 0;
-		var maxEnnemyCounnt = 2;
+		var maxEnnemyCounnt = 5;
 
 		function log(test) {
 			timeNowLog = new Date().getTime();
@@ -473,14 +473,14 @@
 					// TODO Trouver la position où l'ennemi sort de l'écran pour le clear et créer d'autres ennemis
 					if (enemy.position[1] < -7) {
 						// enemy.clear();
-						enemy.position[0] = positionXAleatoire(-5, 5);
+						enemy.position[0] = positionXAleatoire(-4, 4);
 						enemy.position[1] = 6;
 					}
 
 					// TODO si clear un enemy en ajouter un
-					/*if (enemiesArray.length < maxEnnemyCounnt) {
+					if (enemiesArray.length < maxEnnemyCounnt) {
 						enemiesArray.push(createEnnemyRandomPosition());
-					}*/
+					}
 				})
 
 				missilesArray = missilesArray.filter(missile => missile.loaded)
@@ -518,9 +518,9 @@
 
 			// enemy = new Enemy('models/plane.obj');
 			enemiesArray.push(createEnnemyRandomPosition());
-			// enemiesArray.push(createEnnemyRandomPosition());
-			// enemiesArray.push(createEnnemyRandomPosition());
-			// enemiesArray.push(createEnnemyRandomPosition());
+			enemiesArray.push(createEnnemyRandomPosition());
+			enemiesArray.push(createEnnemyRandomPosition());
+			enemiesArray.push(createEnnemyRandomPosition());
 			//shootSample = new Splat(tex);
 
 			// la couleur de fond sera grise foncée
@@ -548,7 +548,7 @@
 		}
 
 		function createEnnemyRandomPosition() {
-			var x = positionXAleatoire(-5, 5);
+			var x = positionXAleatoire(-4, 4);
 			var y = 6;
 			var z = -1 * Math.floor(Math.random() * Math.floor(5));
 
