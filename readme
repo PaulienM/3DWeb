@@ -2,18 +2,19 @@ Etapes ok :
 
 - Background
 - tableau de missiles
-- tableau ennemis (génère des bugs d'affichage)
+- tableau ennemis
 - Disparition Missile/ ennemi si collision
+- Recycler ennemies qui sortent du cadre ( le clear générait des bugs d'affichage donc recycler position en Y)
+- Modifier position de départ de l'ennemi à l'init et lors de l'ajout de nouveaux ennemis
+- Ajouter nouvel ennemi qd ennemies < 5 sur l'écran (cas : ennemi touché par missile et ennemi sortie écran)
+- Etendre le mode aléatoir sur l'axe des X pour que cela prenne tout l'écran à l'init et à l'ajout de nouveaux missiles
+
 
 Etapes à venir :
 
-- Supprimer ennemies qui sortent du cadre
-- Modifier position de départ de l'ennemi
 - Faire disparaître ennemi qui percute avion
-- Ajouter nouvel ennemi qd ennemies < 4 sur l'écran
 - Explosion lors de collision - nouveau splat avec un tableau de textures (4 images devraient suffir)
 
 Bugs :
 
 - au chargement missile gros plan et fond noir
-- bug affichage lorsque missile percute ennemi
