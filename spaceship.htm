@@ -473,7 +473,7 @@
 					// TODO Trouver la position où l'ennemi sort de l'écran pour le clear et créer d'autres ennemis
 					if (enemy.position[1] < -7) {
 						// enemy.clear();
-						enemy.position[0] = Math.floor(Math.random() * Math.floor(5));
+						enemy.position[0] = positionXAleatoire(-5, 5);
 						enemy.position[1] = 6;
 					}
 
