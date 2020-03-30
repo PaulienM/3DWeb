@@ -315,11 +315,12 @@
 				missile.draw();
 			})
 
-			// Dessin explosions
+			// Dessin explosionss
 			explosionsArray.forEach(explosion  => {
 				gl.useProgram(explosion.shader());
 				explosion.sendUniformVariables();
 				explosion.draw();
+				explosion.setPosition(-10, 10, 10);
 			})
 
 			gl.disable(gl.BLEND); // transparence désactivée
@@ -490,6 +491,7 @@
 					// Réinitialiser position enemy et avion lorsque collision
 					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
 						spaceship.clear();
+						animateExplosion(gs, ys, ds, elapsed);
 						enemy.position[1] = 6;
 					}
 
@@ -565,10 +567,10 @@
 			textureExplosion2 = initTexture('textures/explosion2.png');
 			textureExplosion3 = initTexture('textures/explosion3.png');
 			textureExplosion4 = initTexture('textures/explosion4.png');
-			var explosion1 = new Splat(textureExplosion1);
-			var explosion2 = new Splat(textureExplosion2);
-			var explosion3 = new Splat(textureExplosion3);
-			var explosion4 = new Splat(textureExplosion4);
+			explosion1 = new Splat(textureExplosion1);
+			explosion2 = new Splat(textureExplosion2);
+			explosion3 = new Splat(textureExplosion3);
+			explosion4 = new Splat(textureExplosion4);
 
 			explosionsArray= [explosion1, explosion2, explosion3, explosion4];
 
