@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="modelObj.js"></script>
 	<script type="text/javascript" src="enemyObj.js"></script>
 	<script type="text/javascript" src="splat.js"></script>
+	<script type="text/javascript" src="splatEndGame.js"></script>
 
 	<script id="background-vs" type="x-shader/x-vertex">#version 300 es
 	// *** le vertex shader ***
@@ -246,7 +247,47 @@
 
 	</script>
 
+	<script id="splatEndGame-vs" type="x-shader/x-vertex">#version 300 es
+	// *** le vertex shader ***
+	layout(location=0) in vec3 aVertexPosition;// la position du sommet
+	layout(location=1) in vec2 aVertexCoord;// sa coordonnee de texture
+
+	uniform vec3 uPosition;// position du vaisseau
+	out vec2 vTextureCoord;// on souhaite rasteriser la coordonnee
+
+	void main(void) {
+		// projection de la position
+		gl_Position = vec4(aVertexPosition.xy+uPosition.xy, uPosition.z, 1.0);
+
+		// stockage de la coordonnee de texture
+		vTextureCoord = aVertexCoord;
+	}
+
+	</script>
+
 	<script id="splat-fs" type="x-shader/x-fragment">#version 300 es
+	// *** le fragment shader ***
+	precision highp float;// precision des nombres flottant
+
+	uniform vec3 maCouleur;
+	uniform sampler2D uTex;
+
+	in vec2 vTextureCoord;// recuperation de la coord rasterisee
+	out vec4 outColor;
+
+	void main(void) {
+		float alpha = 1.-smoothstep(0.2, 0.25, distance(vec2(.5), vTextureCoord));
+
+		// TEST: affichae d'un point avec la couleur donnée en paramètre
+		//outColor = vec4(alpha*maCouleur,alpha);
+
+		// TEST: affichage d'une texture donnée en paramètre
+		outColor = texture(uTex, vTextureCoord);
+	}
+
+	</script>
+
+	<script id="splatEndGame-fs" type="x-shader/x-fragment">#version 300 es
 	// *** le fragment shader ***
 	precision highp float;// precision des nombres flottant
 
@@ -500,13 +541,14 @@
 					// Réinitialiser position enemy et avion lorsque collision
 					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
 						spaceship.clear();
-						// animateExplosion(gs, ys, ds, elapsed);
+						animateExplosion(gs, ys, ds, elapsed);
 						enemy.position[1] = 6;
 
 
-						gameOver.setPosition(x, y, z);
+						gameOver.setPosition(0, 0, 0);
 						// gameOver.position[0] = 0;
 						gameOver.setParameters(elapsed);
+						// gameOver.initParameters();
 
 
 					}
@@ -561,13 +603,14 @@
 			tex = initTexture('textures/bird.png');
 
 			textGameOver = initTexture('textures/game-over.jpg');
-			gameOver = new Splat(textGameOver);
+			gameOver = new SplatEndGame(textGameOver);
 			gameOver.position[1] = 6;
 
 			initBackgroundShader();
 			initEnemyShader();
 			initModelShader();
 			initSplatShader();
+			initSplatEndGameShader();
 
 			//heightfield = new Heightfield();
 			background = new Background();
