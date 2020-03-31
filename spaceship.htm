@@ -280,6 +280,8 @@
 		var explosion3;
 		var explosion4;
 		var explosionsArray= [];
+		var textGameOver;
+		var gameOver;
 
 		function drawScene() {
 			// initialisation du viewport
@@ -314,6 +316,12 @@
 				missile.sendUniformVariables();
 				missile.draw();
 			})
+
+			// dessin GameOver
+			gl.useProgram(gameOver.shader());
+			gameOver.sendUniformVariables();
+			gameOver.draw();
+
 
 			// Dessin explosionss
 			explosionsArray.forEach(explosion  => {
@@ -470,7 +478,8 @@
 
 				var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
 				var xs = (s[0][0] + s[1][0]) / 2;
-				var gs = s[0][0];
+				var gs
+						= s[0][0];
 				var ds = s[1][0];
 				var ys = s[1][1];
 				var zs = s[1][2] + 0.005;
@@ -491,8 +500,15 @@
 					// Réinitialiser position enemy et avion lorsque collision
 					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
 						spaceship.clear();
-						animateExplosion(gs, ys, ds, elapsed);
+						// animateExplosion(gs, ys, ds, elapsed);
 						enemy.position[1] = 6;
+
+
+						gameOver.setPosition(x, y, z);
+						// gameOver.position[0] = 0;
+						gameOver.setParameters(elapsed);
+
+
 					}
 
 					missilesArray.forEach(missile => {
@@ -509,11 +525,6 @@
 							enemy.position[1] = 6;
 						}
 					})
-
-					/*explosionsArray.forEach(explosion => {
-						explosion.setParameters(elapsed);
-					})*/
-
 
 					// si ennemi sort de l'écran recycler sa position
 					if (enemy.position[1] < -7) {
@@ -548,6 +559,10 @@
 
 			// test: création d'une texture
 			tex = initTexture('textures/bird.png');
+
+			textGameOver = initTexture('textures/game-over.jpg');
+			gameOver = new Splat(textGameOver);
+			gameOver.position[1] = 6;
 
 			initBackgroundShader();
 			initEnemyShader();
