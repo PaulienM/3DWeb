@@ -457,6 +457,7 @@
 		var timeNowLog;
 		var lastTimeLog = 0;
 		var maxEnnemyCounnt = 5;
+		var nbVies = 0;
 
 		function log(test) {
 			timeNowLog = new Date().getTime();
@@ -519,8 +520,7 @@
 
 				var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
 				var xs = (s[0][0] + s[1][0]) / 2;
-				var gs
-						= s[0][0];
+				var gs = s[0][0];
 				var ds = s[1][0];
 				var ys = s[1][1];
 				var zs = s[1][2] + 0.005;
@@ -540,17 +540,22 @@
 
 					// Réinitialiser position enemy et avion lorsque collision
 					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
+						nbVies++;
 						spaceship.clear();
-						animateExplosion(gs, ys, ds, elapsed);
+						// animateExplosion(gs, ys, ds, elapsed);
 						enemy.position[1] = 6;
-
-
 						gameOver.setPosition(0, 0, 0);
-						// gameOver.position[0] = 0;
 						gameOver.setParameters(elapsed);
-						// gameOver.initParameters();
 
-
+						/*if (nbVies >3) {
+							gameOver.setPosition(0, 0, 0);
+							gameOver.setParameters(elapsed);
+						} else {
+							// spaceship.position[1] = 1;
+							var canvas = document.getElementById("SpaceShip");
+							initGL(canvas);
+							spaceship = new Model('models/spaceship.obj');
+						}*/
 					}
 
 					missilesArray.forEach(missile => {
