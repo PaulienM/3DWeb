@@ -1,7 +1,8 @@
 <html>
 <head>
 	<title>SpaceShip</title>
-	<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="style.css">
 
 	<script type="text/javascript" src="gl-matrix.js"></script>
 	<script type="text/javascript" src="game-utils.js"></script>
@@ -102,7 +103,7 @@
 	}
 
 	void main(void) {
-		// décalage avec la variable uOffset
+		// dÃ©calage avec la variable uOffset
 		vec2 p = vTextureCoord*2.0-vec2(.1)+uOffset;
 
 		float d = computeHeight(p);// profondeur au point p
@@ -116,7 +117,7 @@
 
 		// affichage de la normale
 
-		// de l'eau si inferieur à altitude de la mer
+		// de l'eau si inferieur Ã  altitude de la mer
 		if (d <= -.3) {
 			outColor = vec4(bleu*n[1]*n[2]+bleu/2.,1.);
 		// de l'herbe sinon
@@ -172,12 +173,11 @@
 
 		float s = 50.0;
 
-		vec3 Kd = vec3(.2,0.6,1.0);
+		vec3 Kd = vec3(1.,1.,1.);
 		vec3 Ks = vec3(1.0);
 		float diff = max(dot(l,n),0.0);
 		float spec = pow(max(dot(r,v),0.0),s);
 
-		// pour le moment, on affiche juste la normale
 		outColor = vec4(Kd*diff + Ks*spec, 1.0);
 	}
 
@@ -212,18 +212,17 @@
 	void main(void) {
 		// la couleur est attribuee au fragment courant
 		vec3 n = normalize(vNormal);
-		vec3 v = vec3(0.0,0.0,-1.0);
+		vec3 v = vec3(1.0,1.0,-1.0);
 		vec3 l = normalize(vec3(-0.2,0.0,1.0));
 		vec3 r = reflect(-l,n);
 
 		float s = 50.0;
 
-		vec3 Kd = vec3(.2,0.6,1.0);
+		vec3 Kd = vec3(35./255.,83./255.,140./255.);
 		vec3 Ks = vec3(1.0);
 		float diff = max(dot(l,n),0.0);
 		float spec = pow(max(dot(r,v),0.0),s);
 
-		// pour le moment, on affiche juste la normale
 		 outColor = vec4(Kd*diff + Ks*spec, 1.0);
 	}
 
@@ -278,10 +277,10 @@
 	void main(void) {
 		float alpha = 1.-smoothstep(0.2, 0.25, distance(vec2(.5), vTextureCoord));
 
-		// TEST: affichae d'un point avec la couleur donnée en paramètre
+		// TEST: affichae d'un point avec la couleur donnÃ©e en paramÃ¨tre
 		//outColor = vec4(alpha*maCouleur,alpha);
 
-		// TEST: affichage d'une texture donnée en paramètre
+		// TEST: affichage d'une texture donnÃ©e en paramÃ¨tre
 		outColor = texture(uTex, vTextureCoord);
 	}
 
@@ -300,10 +299,10 @@
 	void main(void) {
 		float alpha = 1.-smoothstep(0.2, 0.25, distance(vec2(.5), vTextureCoord));
 
-		// TEST: affichae d'un point avec la couleur donnée en paramètre
+		// TEST: affichae d'un point avec la couleur donnÃ©e en paramÃ¨tre
 		//outColor = vec4(alpha*maCouleur,alpha);
 
-		// TEST: affichage d'une texture donnée en paramètre
+		// TEST: affichage d'une texture donnÃ©e en paramÃ¨tre
 		outColor = texture(uTex, vTextureCoord);
 	}
 
@@ -321,8 +320,14 @@
 		var explosion3;
 		var explosion4;
 		var explosionsArray= [];
+		var kill = 0;
 		var textGameOver;
 		var gameOver;
+		// wait, play, pause, gameover
+		var gameMode = 'wait';
+		var life = 3;
+		var playPauseButton;
+		var lifeText;
 
 		function drawScene() {
 			// initialisation du viewport
@@ -331,7 +336,7 @@
 			// efface les buffers de couleur et de profondeur
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-			// dessin du fond (décommenter pour travailler dessus)
+			// dessin du fond (dÃ©commenter pour travailler dessus)
 			gl.useProgram(background.shader());
 			background.sendUniformVariables();
 			background.draw();
@@ -349,7 +354,7 @@
 			})
 
 			// test pour afficher un splat quand on appuie sur espace
-			gl.enable(gl.BLEND); // transparence activée
+			gl.enable(gl.BLEND); // transparence activÃ©e
 
 			// dessin missiles
 			missilesArray.forEach(missile  => {
@@ -372,7 +377,7 @@
 				explosion.setPosition(-10, 10, 10);
 			})
 
-			gl.disable(gl.BLEND); // transparence désactivée
+			gl.disable(gl.BLEND); // transparence dÃ©sactivÃ©e
 		}
 
 		// une bonne maniere de gerer les evenements claviers
@@ -424,10 +429,10 @@
 
 			if (currentlyPressedKeys[32]) { // SPACE
 				// exemple: comment positionner un splat devant le vaisseau
-				var p = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
+				var p = spaceship.getBBox(); // boite englobante du vaisseau sur l'Ã©cran
 				var x = (p[0][0] + p[1][0]) / 2;
 				var y = p[1][1];
-				var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
+				var z = p[1][2] + 0.005; // profondeur du splat (juste derriÃ¨re le vaisseau)
 
 
 
@@ -457,7 +462,6 @@
 		var timeNowLog;
 		var lastTimeLog = 0;
 		var maxEnnemyCounnt = 5;
-		var nbVies = 0;
 
 		function log(test) {
 			timeNowLog = new Date().getTime();
@@ -507,18 +511,18 @@
 
 		function animate() {
 
-			// fonction appelée à chaque frame, permet d'animer la scène
+			// fonction appelÃ©e Ã  chaque frame, permet d'animer la scÃ¨ne
 			timeNow = new Date().getTime();
 			// log(enemiesArray);
 
 			if (lastTime != 0) {
 				// anime chacun des objets de la scene
-				// si necessaire (en fonction du temps ecoulé)
+				// si necessaire (en fonction du temps ecoulÃ©)
 				var elapsed = timeNow - lastTime;
 				background.setParameters(elapsed);
 				spaceship.setParameters(elapsed);
 
-				var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'écran
+				var s = spaceship.getBBox(); // boite englobante du vaisseau sur l'Ã©cran
 				var xs = (s[0][0] + s[1][0]) / 2;
 				var gs = s[0][0];
 				var ds = s[1][0];
@@ -536,26 +540,11 @@
 					var g = p[0][0];
 					var d = p[1][0];
 					var y = p[1][1];
-					var z = p[1][2] + 0.005; // profondeur du splat (juste derrière le vaisseau)
+					var z = p[1][2] + 0.005; // profondeur du splat (juste derriÃ¨re le vaisseau)
 
-					// Réinitialiser position enemy et avion lorsque collision
+					// RÃ©initialiser position enemy et avion lorsque collision
 					if (gs < g &&  ds > d && ys >= y && spaceship.loaded) {
-						nbVies++;
-						spaceship.clear();
-						// animateExplosion(gs, ys, ds, elapsed);
-						enemy.position[1] = 6;
-						gameOver.setPosition(0, 0, 0);
-						gameOver.setParameters(elapsed);
-
-						/*if (nbVies >3) {
-							gameOver.setPosition(0, 0, 0);
-							gameOver.setParameters(elapsed);
-						} else {
-							// spaceship.position[1] = 1;
-							var canvas = document.getElementById("SpaceShip");
-							initGL(canvas);
-							spaceship = new Model('models/spaceship.obj');
-						}*/
+						gameMode = 'gameover';
 					}
 
 					missilesArray.forEach(missile => {
@@ -565,21 +554,23 @@
 							missile.clear();
 						}
 						if (missile.position[0] < g && missile.position[0] > d && missile.position[1] >= y && enemy.loaded) {
+						    document.getElementById('score').innerText = ++kill;
 							missile.clear();
 
 							animateExplosion(missile.position[0], missile.position[1],  missile.position[2], elapsed);
 
 							enemy.position[1] = 6;
+                            enemy.position[0] = positionXAleatoire();
 						}
 					})
 
-					// si ennemi sort de l'écran recycler sa position
+					// si ennemi sort de l'Ã©cran recycler sa position
 					if (enemy.position[1] < -7) {
-						enemy.position[0] = positionXAleatoire(-4, 4);
+						enemy.position[0] = positionXAleatoire();
 						enemy.position[1] = 6;
 					}
 
-					// si nombre enemy array inférieur à 5 create ennemy
+					// si nombre enemy array infÃ©rieur Ã  5 create ennemy
 					if (enemiesArray.length < maxEnnemyCounnt) {
 						enemiesArray.push(createEnnemyRandomPosition());
 					}
@@ -592,19 +583,43 @@
 
 		// mAIN LOOP
 		function tick() {
-			requestAnimFrame(tick); // nav
-			handleKeys(); // action lié aux touches clavier
-			drawScene(); // dessine model et back ecran
-			animate(); // calcul nouvelles positions
+		    if (gameMode === 'play') {
+                requestAnimFrame(tick); // nav
+                handleKeys(); // action liÃ© aux touches clavier
+                drawScene(); // dessine model et back ecran
+                animate(); // calcul nouvelles positions
+            } else if (gameMode === 'wait') {
+		        playPauseButton.disabled = true;
+		        drawScene();
+		        let timer = document.getElementById('countdown');
+		        startTimer(3,timer);
+			} else if (gameMode === 'pause') {
+		        playPauseButton.innerText = 'play';
+			} else if (gameMode === 'gameover') {
+		        if (life > 0) {
+		            life--;
+		            let hearth = 'â™¡';
+		            lifeText.innerText = hearth.repeat(life);
+		            resetPosition();
+		            gameMode = 'play';
+		            tick();
+				} else {
+                    document.getElementById('play-pause-button').innerText = 'play';
+                    gameOver.setPosition(0, 0, 0);
+                    drawScene();
+				}
+			}
 		}
 
 
 		function webGLStart() {
 			// initialisation du canvas et des objets OpenGL
 			var canvas = document.getElementById("SpaceShip");
+			playPauseButton = document.getElementById('play-pause-button');
+			lifeText = document.getElementById('life');
 			initGL(canvas);
 
-			// test: création d'une texture
+			// test: crÃ©ation d'une texture
 			tex = initTexture('textures/bird.png');
 
 			textGameOver = initTexture('textures/game-over.jpg');
@@ -637,13 +652,13 @@
 
 			explosionsArray= [explosion1, explosion2, explosion3, explosion4];
 
-			// la couleur de fond sera grise foncée
+			// la couleur de fond sera grise foncÃ©e
 			gl.clearColor(0.3, 0.3, 0.3, 1.0);
 
 			// active le test de profondeur
 			gl.enable(gl.DEPTH_TEST);
 
-			// fonction de mélange utilisée pour la transparence
+			// fonction de mÃ©lange utilisÃ©e pour la transparence
 			gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 			/* Mouse and keyboard interaction functions */
@@ -657,18 +672,58 @@
 			 tick();
 		}
 
-		function positionXAleatoire(min, max) {
+		function positionXAleatoire(min = -3.8, max = 3.8) {
 			return Math.floor(Math.random()*(max - min + 1)) + min;
 		}
 
 		function createEnnemyRandomPosition() {
-			var x = positionXAleatoire(-4, 4);
+			var x = positionXAleatoire();
 			var y = 6;
 			var z = -1 * Math.floor(Math.random() * Math.floor(5));
 
-			return new Enemy('models/plane.obj', x, y, z);
+			return new Enemy('models/tardis.obj', x, y, z);
 		}
 
+        function startTimer(duration, display) {
+			let interval = setInterval(function () {
+
+				display.textContent = duration;
+
+				if (--duration < 0) {
+					gameMode = 'play';
+					display.textContent = '';
+					playPauseButton.disabled = false;
+					clearInterval(interval);
+					tick();
+				}
+			}, 1000);
+        }
+
+        function resetPosition() {
+		    enemiesArray.forEach(enemy => {
+                enemy.position[0] = positionXAleatoire();
+                enemy.position[1] = 6;
+			});
+			spaceship.initParameters();
+        }
+
+        function clickPlayPauseButton() {
+			if (gameMode === 'play') {
+			    gameMode = 'pause';
+			} else if (gameMode === 'pause') {
+			    document.getElementById('play-pause-button').innerText = 'pause';
+			    gameMode = 'wait';
+			    tick();
+			} else if (gameMode === 'gameover') {
+                document.getElementById('play-pause-button').innerText = 'pause';
+                life = 3;
+			    lifeText.innerText = 'â™¡â™¡â™¡';
+                gameOver.setPosition(10,10,10);
+			    resetPosition();
+			    gameMode = 'wait';
+			    tick();
+			}
+        }
 	</script>
 
 
@@ -676,6 +731,16 @@
 
 
 <body onload="webGLStart();">
-<canvas id="SpaceShip" style="border: none;" width="800" height="800"></canvas>
+<div class="container">
+	<div id="countdown">3</div>
+	<canvas id="SpaceShip" style="border: none; z-index: 0" width="800" height="800"></canvas>
+</div>
+<div id="text">
+	<p id="score">0</p>
+	<div id="play-pause-button-container">
+		<button id="play-pause-button" onclick="clickPlayPauseButton()">Pause</button>
+	</div>
+	<p id="life">â™¡â™¡â™¡</p>
+</div>
 </body>
 </html>
